@@ -1,0 +1,15 @@
+[package]
+name = "cf-log-sender"
+version = "0.1.0"
+authors = ["Esa Varemo <esa@kuivanto.fi>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+itertools = "0.10.0"
+elasticsearch = "7.10.0-alpha.1"
+serde = "~1"
+serde_json = "~1"
+tokio = { version = "0.2.0", default-features = false, features = ["macros", "tcp", "time"] }
+ring = "0.16.19"
