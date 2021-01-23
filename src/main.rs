@@ -29,6 +29,19 @@ fn update_keys_from_header(line: &str, keys: &mut Vec<String>) {
     }
 }
 
+fn add_metadata(data: &mut HashMap<String,String>) {
+    let get_params = data[&String::from("cs-uri-query")].clone();
+    for param in get_params.split('&') {
+        let param_split = param.split('=').collect::<Vec<&str>>();
+        if param_split.len() == 2 {
+            let (key, value) = (param_split[0], param_split[1]);
+            if key == "pk_campaign" {
+                data.insert(String::from("campaign"), value.to_string());
+            }
+        }
+    }
+}
+
 #[tokio::main]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
@@ -64,11 +77,12 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "pipeline": "cfn-logs",
             }}).into());
 
-            body.push(json!(
-                keys.iter()
-                    .zip(line.split('\t'))
-                    .collect::<HashMap<_, _>>()
-            ).into());
+            let mut data = 
+                keys.iter().map(|r| r.clone())
+                    .zip(line.split('\t').map(|s| s.to_string()))
+                    .collect::<HashMap<String, _>>();
+            add_metadata(&mut data);
+            body.push(json!(data).into());
         }
         let response = 
             client
