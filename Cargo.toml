@@ -13,3 +13,7 @@ serde = "~1"
 serde_json = "~1"
 tokio = { version = "0.2.0", default-features = false, features = ["macros", "tcp", "time"] }
 ring = "0.16.19"
+
+[profile.release]
+debug = true
+
