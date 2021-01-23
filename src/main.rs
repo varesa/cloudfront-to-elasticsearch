@@ -52,7 +52,10 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for chunk in &chunks {
         let mut body: Vec<JsonBody<_>> = Vec::with_capacity(2*CHUNK_SIZE);
         for line in chunk {
-            update_keys_from_header(line, &mut keys);
+            if line.chars().nth(0) == Some('#') {
+                update_keys_from_header(line, &mut keys);
+                continue;
+            }
 
             let hash = digest::digest(&digest::SHA256, line.as_bytes());
             body.push(json!({"index": {
