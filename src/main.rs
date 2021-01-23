@@ -52,6 +52,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for chunk in &chunks {
         let mut body: Vec<JsonBody<_>> = Vec::with_capacity(2*CHUNK_SIZE);
         for line in chunk {
+            if line.chars().count() == 0 { continue; }
             if line.chars().nth(0) == Some('#') {
                 update_keys_from_header(line, &mut keys);
                 continue;
