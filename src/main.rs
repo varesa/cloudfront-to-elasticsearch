@@ -61,6 +61,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let hash = digest::digest(&digest::SHA256, line.as_bytes());
             body.push(json!({"index": {
                 "_id": format!("{:x?}", hash)[7..18],
+                "pipeline": "cfn-logs",
             }}).into());
 
             body.push(json!(
